@@ -21,6 +21,9 @@ const {
 // Requisito 5
 const { validationId, validateAge } = require('./middlewares/postTalkerId');
 
+// Requisito 6
+const deleteTalkerId = require('./middlewares/deleteTalkerId');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -44,6 +47,7 @@ app.put(
   talkValidation,
   validationId,
 );
+app.delete('/talker/:id', tokenValidation, deleteTalkerId);
 
 app.listen(PORT, () => {
   console.log('Online');
