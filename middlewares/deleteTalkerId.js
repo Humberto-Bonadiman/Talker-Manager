@@ -13,7 +13,7 @@ const deleteTalkerId = (request, response) => {
   if (talkerIndex === -1) return response.status(404).json({ message: 'Talker not found!' });
   lookJson.splice(talkerIndex, 1);
   fs.writeFile('./talker.json', JSON.stringify(lookJson), (err) => consoleError(err));
-  response.status(204).end();
+  return response.status(204).end();
 };
 
 module.exports = deleteTalkerId;

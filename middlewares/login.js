@@ -21,18 +21,18 @@ const isEmailValid = (email) => {
 const login = (request, response) => {
   const { email, password } = request.body;
   if (!email) {
-    response.status(400).json({ message: 'O campo "email" é obrigatório' });
+    return response.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (isEmailValid(email) === false) {
-    response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   if (!password) {
-    response.status(400).json({ message: 'O campo "password" é obrigatório' });
+    return response.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length <= 5) {
-    response.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    return response.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  response.status(200).send(`{ "token": "${geraStringAleatoria()}" }`);
+  return response.status(200).send(`{ "token": "${geraStringAleatoria()}" }`);
 };
 
 module.exports = login;

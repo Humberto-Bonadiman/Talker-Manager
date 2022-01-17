@@ -7,7 +7,7 @@ const talkerId = (request, response) => {
 
   if (!checkId) return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-  response.status(200).json(checkId);
+  return response.status(200).json(checkId);
 };
 
 module.exports = talkerId;
