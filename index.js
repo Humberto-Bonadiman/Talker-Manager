@@ -10,12 +10,18 @@ const talkerId = require('./middlewares/talkerId');
 const login = require('./middlewares/login');
 
 // Requisito 4
-const tokenValidation = require('./middlewares/postTalker');
+const {
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  allValidation,
+} = require('./middlewares/postTalker');
+/* const tokenValidation = require('./middlewares/postTalker');
 const nameValidation = require('./middlewares/postTalker');
 const ageValidation = require('./middlewares/postTalker');
 const talkValidation = require('./middlewares/postTalker');
-const talkWatchedValidation = require('./middlewares/postTalker');
-const AllTalkValidation = require('./middlewares/postTalker');
+const AllValidation = require('./middlewares/postTalker'); */
 
 const app = express();
 app.use(bodyParser.json());
@@ -31,15 +37,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', talker);
 app.get('/talker/:id', talkerId);
 app.post('/login', login);
-app.post(
-  '/talker',
-  tokenValidation,
-  nameValidation,
-  ageValidation,
-  talkValidation,
-  talkWatchedValidation,
-  AllTalkValidation,
-  );
+app.post('/talker', tokenValidation, nameValidation, ageValidation, talkValidation, allValidation);
 
 app.listen(PORT, () => {
   console.log('Online');

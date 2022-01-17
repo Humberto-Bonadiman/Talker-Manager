@@ -8,6 +8,12 @@ function DataValidator(data) {
 /* Source dateRegex:
   https://www.delftstack.com/pt/howto/javascript/javascript-validate-date/ */
 
+const consoleErro = (err) => {
+  if (err) {
+    return console.error(err);
+  }
+};
+
 const postTalker = (theRequest) => {
   const { name, age, talk } = theRequest;
   const { watchedAt, rate } = talk;
@@ -16,14 +22,14 @@ const postTalker = (theRequest) => {
   const newJson = { name, age, id, talk: { watchedAt, rate } };
   readJson.push(newJson);
 
-  fs.writeFileSync('./talker.json', JSON.stringify(readJson));
+  fs.writeFile('./talker.json', JSON.stringify(readJson), (err) => consoleErro(err));
   return newJson;
 };
 
 const tokenValidation = (request, response, next) => {
-  const token = request.headers.authorization;
-  if (!token) return response.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) return response.status(401).json({ message: 'Token inválido' });
+  const { authorization } = request.headers;
+  if (!authorization) return response.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return response.status(401).json({ message: 'Token inválido' });
   next();
 };
 
@@ -48,32 +54,32 @@ const ageValidation = (request, response, next) => {
 const talkValidation = (request, response, next) => {
   const { talk } = request.body;
   if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
-    return response.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    return response.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
     });
   }
+
   next();
 };
 
-const AllTalkValidation = (request, response) => {
+const allValidation = (request, response) => {
   const { talk } = request.body;
 
   if (!DataValidator(talk.watchedAt)) {
     return response.status(400)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-
-  if (!Number.isInteger(talk.rate) || (talk.rate < 1 || talk.rate > 5)) {
+  if (!Number.isInteger(talk.rate) || talk.rate < 1 || talk.rate > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   return response.status(201).json(postTalker(request.body));
 };
 
-module.exports = (
+module.exports = {
   tokenValidation,
   nameValidation,
   ageValidation,
   talkValidation,
-  AllTalkValidation
-  );
+  allValidation,
+};
