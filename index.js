@@ -24,6 +24,9 @@ const { validationId, validateAge } = require('./middlewares/postTalkerId');
 // Requisito 6
 const deleteTalkerId = require('./middlewares/deleteTalkerId');
 
+// Requisito 7
+const talkerSearch = require('./middlewares/talkerSearch');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -36,6 +39,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', talker);
+app.get('/talker/search', tokenValidation, talkerSearch);
 app.get('/talker/:id', talkerId);
 app.post('/login', login);
 app.post('/talker', tokenValidation, nameValidation, ageValidation, talkValidation, allValidation);
